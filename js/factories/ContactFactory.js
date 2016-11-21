@@ -42,9 +42,35 @@ app.factory("ContactFactory", ($q, $http, FIREBASE_CONFIG) => {
                 .error(errorResponse => reject(errorResponse));
         });
     };
+
+    const getSingleContact = (contactId) => {
+        return $q((resolve, reject) => {
+            $http.get(`${FIREBASE_CONFIG.databaseURL}/contacts/${contactId}.json`)
+                .success(getSingleResponse => resolve(getSingleResponse))
+                .error(errorResponse => reject(errorResponse));
+        });
+    };
+
+    const editContact = (editContact) => {
+        return $q((resolve, reject) => {
+            $http.put(`${FIREBASE_CONFIG.databaseURL}/contacts/${editContact.id}.json`,
+                    JSON.stringify({
+                        name: editContact.name,
+                        email: editContact.email,
+                        birthday: editContact.birthday,
+                        phone: editContact.phone,
+                        mobile: editContact.mobile
+                    }))
+                .success(editResponse => resolve(editResponse))
+                .error(errorResponse => reject(errorResponse));
+        });
+    };
+
     return {
-        getContactList,
-        postNewContact,
-        deleteContact
+        getContactList: getContactList,
+        postNewContact: postNewContact,
+        deleteContact: deleteContact,
+        getSingleContact: getSingleContact,
+        editContact: editContact
     };
 });
